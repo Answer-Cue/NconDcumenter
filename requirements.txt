@@ -3,4 +3,3 @@ python-docx
 noisereduce
 librosa
 soundfile
-spleeter
