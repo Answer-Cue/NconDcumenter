@@ -1,2 +1,3 @@
 import sys
-print("DCdesy！", file=sys.stderr)
+def run():
+  print("DCdesy！", file=sys.stderr)
