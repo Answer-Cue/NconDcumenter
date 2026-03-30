@@ -1,15 +1,28 @@
+import streamlit as st
 import os
 import runpy
 
-# functions フォルダ
-FUNCTIONS_DIR = os.path.join(os.path.dirname(__file__), "functions")
+FUNCTIONS_DIR = "functions"  # functions フォルダのパス
 
-# サブフォルダを自動取得
-for folder in os.listdir(FUNCTIONS_DIR):
-    folder_path = os.path.join(FUNCTIONS_DIR, folder)
-    main_file = os.path.join(folder_path, "main.py")
-    
-    if os.path.isdir(folder_path) and os.path.isfile(main_file):
-        print(f"=== モジュール {folder} 実行開始 ===", flush=True)
-        runpy.run_path(main_file, run_name="__main__")
-        print(f"=== モジュール {folder} 実行終了 ===\n", flush=True)
+st.title("Streamlit ハブ画面")
+
+# セッションステートで選択管理
+if "current_module" not in st.session_state:
+    st.session_state.current_module = None
+
+if st.session_state.current_module is None:
+    st.write("モジュールを選択してください：")
+    for folder in os.listdir(FUNCTIONS_DIR):
+        folder_path = os.path.join(FUNCTIONS_DIR, folder)
+        main_file = os.path.join(folder_path, "main.py")
+        if os.path.isdir(folder_path) and os.path.isfile(main_file):
+            if st.button(f"{folder} を起動"):
+                st.session_state.current_module = folder
+                st.experimental_rerun()  # 状態更新して再描画
+else:
+    # 選択されたモジュールの main.py を実行
+    module_path = os.path.join(FUNCTIONS_DIR, st.session_state.current_module, "main.py")
+    try:
+        runpy.run_path(module_path, run_name="__main__")
+    except Exception as e:
+        st.error(f"{st.session_state.current_module} 実行中にエラー: {e}")
