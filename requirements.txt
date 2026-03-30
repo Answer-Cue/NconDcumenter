@@ -1,6 +1,8 @@
-streamlit
+streamlit>=1.25
 python-docx
 noisereduce
 librosa
 soundfile
-spleeter
+tensorflow-cpu==2.13.0
+spleeter==2.3.2
+ffmpeg-python
